@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A RoYgBv puzzle</title>
+<meta name="description" content="Someone made you a RoYgBv puzzle. Open it in the game.">
+<meta property="og:title" content="Can you solve my RoYgBv puzzle?">
+<meta property="og:description" content="Mix red, yellow and blue to turn the whole board one color.">
+<style>
+  :root { --ink: #333; --soft: #666; --bg: #fff; --button: #f0f0f0; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ink: #eee; --soft: #aaa; --bg: #151515; --button: #2a2a2a; } }
+  :root[data-theme="dark"] { --ink: #eee; --soft: #aaa; --bg: #151515; --button: #2a2a2a; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 420px; margin: 0 auto; padding: 56px 16px; text-align: center; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 44px); gap: 4px; justify-content: center; margin-bottom: 28px; }
+  .tiles span { height: 44px; border-radius: 8px; }
+  h1 { font-size: 26px; margin: 0 0 8px; }
+  p { color: var(--soft); margin: 0 0 28px; }
+  a.button { display: block; padding: 15px; margin: 0 0 12px; border-radius: 14px; background: var(--button); color: var(--ink); text-decoration: none; font-weight: 600; }
+  a.primary { background: #e33b3b; color: #fff; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <div class="tiles" aria-hidden="true">
+    <span style="background:#e5d97b"></span><span style="background:#8dd172"></span><span style="background:#7899e8"></span>
+    <span style="background:#f4a973"></span><span></span><span style="background:#c160c1"></span>
+    <span style="background:#ef727b"></span><span></span><span style="background:#67686a"></span>
+  </div>
+  <div id="puzzle">
+    <h1>Can you solve this puzzle?</h1>
+    <p>Someone made you a RoYgBv board. Open it in the game to play.</p>
+    <a id="open" class="button primary" href="#">Open in RoYgBv</a>
+  </div>
+  <div id="missing" class="hidden">
+    <h1>This link isn't complete</h1>
+    <p>Ask for the link again. It should end with a puzzle code.</p>
+  </div>
+  <a class="button" href="https://apps.apple.com/app/id1568432072">Get RoYgBv on the App Store</a>
+  <a class="button" href="https://play.google.com/store/apps/details?id=com.EGames.RoYgBv">Get RoYgBv on Google Play</a>
+</main>
+<script>
+  // Hands the puzzle code to the game (SharedPuzzleLink.cs reads roygbv://play?p=CODE).
+  var code = new URLSearchParams(location.search).get("p") || "";
+  if (!/^[A-Za-z0-9_-]{4,64}$/.test(code)) {
+    document.getElementById("puzzle").classList.add("hidden");
+    document.getElementById("missing").classList.remove("hidden");
+  } else {
+    var play = "https://play.google.com/store/apps/details?id=com.EGames.RoYgBv";
+    var appLink = /Android/i.test(navigator.userAgent)
+      ? "intent://play?p=" + code + "#Intent;scheme=roygbv;package=com.EGames.RoYgBv;S.browser_fallback_url=" + encodeURIComponent(play) + ";end"
+      : "roygbv://play?p=" + code;
+    document.getElementById("open").href = appLink;
+    // Try the game straight away; the buttons stay for when the browser asks first.
+    location.href = appLink;
+  }
+</script>
+</body>
+</html>
